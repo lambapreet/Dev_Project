@@ -5,8 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock title %}</title>
-    <link rel="stylesheet" type='text/css' media='screen' href='{% static "css/main.css" %}'><meta charset="UTF-8" />
+    <link rel="stylesheet" type='text/css' media='screen' href="{% static 'css/main.css' %}"><meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -17,9 +16,9 @@
   <!-- Mumble UI -->
     <link rel="stylesheet" href="{% static 'uikit/styles/uikit.css' %}" />
   <!-- Dev Search UI -->
-    <link rel="stylesheet" href="{% static 'styles/app.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
 
-    <title>DevSearch - Connect with Developers!</title>
+    <title>Dev_Project - Connect with Developers!</title>
 </head>
 <body>
     {% include "navbar.html" %}

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 
 {% block title %}Project{% endblock title %}
 
@@ -31,37 +31,32 @@
     <section class="projectsList">
       <div class="container">
         <div class="grid grid--three">
-        {% for project in projects %}
-          <div class="column">
-            <div class="card project">
-              <a href="{% url 'project' project.id %}" class="project">
-                <img class="project__thumbnail" src="{{project.featured.url}}" alt="project thumbnail" />
-                <div class="card__body">
-                  <h3 class="project__title">{{project.title}}</h3>
-                  <p><a class="project__author" href="{% url 'user-profile' project.owner.id %}">{{project.owner.name}}</a></p>
-                  <p class="project--rating">
-                    <span style="font-weight: bold;">{{project.vote_ratio}}</span> Postitive
-                    Feedback ({{project.vote_total}} {{project.vote_total | pluralize:"s"}})
-                  </p>
-                  <div class="project__tags">
-                    {% for tag in project.tags.all %}
-                        <span class="tag tag--pill tag--main">
-                            <small>{{tag}}</small>
-                        </span>
-                    {% endfor %}
+          {% for project in projects %}
+            <div class="column">
+              <div class="card project">
+                <a href="{% url 'project' project.id %}" class="project">
+                  <img class="project__thumbnail" src="{{project.featured_image.url}}" alt="project thumbnail" />
+                  <div class="card__body">
+                    <h3 class="project__title">{{project.title}}</h3>
+                    <p><a class="project__author" href="{% url 'user-profile' project.owner.id %}">{{project.owner.name}}</a></p>
+                    <p class="project--rating">
+                      <span style="font-weight: bold;">{{project.vote_ratio}}%</span> Postitive
+                      Feedback ({{project.vote_total}} {{project.vote_total | pluralize:"s"}})
+                    </p>
+                    <div class="project__tags">
+                      {% for tag in project.tags.all %}
+                          <span class="tag tag--pill tag--main">
+                              <small>{{tag}}</small>
+                          </span>
+                      {% endfor %}
+                    </div>
                   </div>
-                </div>
-              </a>
+                </a>
+              </div>
             </div>
-          </div>
           {% endfor %}
 
-          
-          
-
-          
-
-          
+                   
         </div>
       </div>
     </section>
