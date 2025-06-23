@@ -11,7 +11,7 @@ from .forms import CustomUSerCreationForm, ProfileForm, SkillForm
 
 def loginUser(request):
     
-    page = 'login'
+    page = 'login' 
     if request.user.is_authenticated:
         return redirect('profiles')
     
@@ -28,7 +28,7 @@ def loginUser(request):
         
         if user is not None:
             login(request,user)
-            return redirect('proifles')
+            return redirect('profiles')
         else:
             messages.error(request,'Incorrect value')
             
@@ -36,7 +36,7 @@ def loginUser(request):
 
 def logoutUser(request):
     logout(request)
-    messages.error(request,'user logout!')
+    messages.info(request,'user logout!')
     return redirect('login')
 
 def registerUser(request):

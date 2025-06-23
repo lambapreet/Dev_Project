@@ -33,8 +33,6 @@
                     </div>
                 {% endfor %}
 
-            <!-- Input:Text -->
-
 
                 <div class="auth__actions">
                     <input class="btn btn--sub btn--lg" type="submit" value="Sign  In" />
@@ -56,7 +54,7 @@
                     <p>Hello Developer, Welcome Back!</p>
                 </div>
 
-                <form action="{% url 'login' %}" method='POST'>
+                <form action="{% url 'login' %}" method='POST' class="form auth__form">
                     {% csrf_token %}
                     <div class="form__field">
                         <label for="formInput#text">Username: </label>
