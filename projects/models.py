@@ -19,9 +19,11 @@ class Project(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, primary_key=True)
     
     
-    
     def __str__(self):
         return self.title
+    
+    class Meta:
+        ordering = ['created']
     
 
 VOTE_TYPE = (
