@@ -52,19 +52,21 @@
           </div>
 
           <table class="settings__table">
-            {% for skill in skills %}
-              <tr>
-                <td class="settings__tableInfo">
-                  <h4>{{skill.name}}</h4>
-                  <p>{{skill.description}}</p>
-                </td>
-                <td class="settings__tableActions">
-                  <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-skill' skill.id %}"><i class="im im-edit"></i> Edit</a>
-                  <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-skill' %}?next=/account"><i class="im im-x-mark-circle-o"></i>
-                    Delete</a>
-                </td>
-              </tr>
-            {% endfor %}
+            {% with skills|slice:"0:5" as top_skills %}
+              {% for skill in top_skills %}
+                <tr>
+                  <td class="settings__tableInfo">
+                    <h4>{{skill.name}}</h4>
+                    <p>{{skill.description}}</p>
+                  </td>
+                  <td class="settings__tableActions">
+                    <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-skill' skill.id %}"><i class="im im-edit"></i> Edit</a>
+                    <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-skill' %}?next=/account"><i class="im im-x-mark-circle-o"></i>
+                      Delete</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endwith %}
           </table>
 
           <div class="settings">
@@ -80,7 +82,7 @@
                 </td>
                 <td class="settings__tableInfo">
                   <a href="{% url 'project' project.id %}">{{project.title}}</a>
-                  <p>{{project.description | slice: "150"}}</p>
+                  <p>{{ project.description|slice:":150" }}</p>
                 </td>
                 <td class="settings__tableActions">
                    <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-project' project.id %}"><i class="im im-edit"></i> Edit</a>

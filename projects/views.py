@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import ProjectForm, ReviewForm
@@ -10,71 +10,98 @@ from .utils import searchProjects, paginateProjects
 # Create your views here.
 
 def projects(request):
-    projects,search_query = searchProjects(request)
-    
+    projects, search_query = searchProjects(request)
     custom_range, projects = paginateProjects(request, projects, 3)
-    
-        
-    context =  {'projects': projects, 'search_query':search_query, 'custom_range':custom_range}
-    return render(request, 'projects/projects.html',context)
+
+    context = {
+        'projects': projects,
+        'search_query': search_query,
+        'custom_range': custom_range,
+    }
+    return render(request, 'projects/projects.html', context)
 
 
 def project(request, pk):
-    projectObj = Project.objects.get(id=pk)
+    projectObj = get_object_or_404(Project, id=pk)
     form = ReviewForm()
-    
+
     if request.method == 'POST':
         form = ReviewForm(request.POST)
-        review = form.save(commit=False)
-        review.project = projectObj
-        review.owner = request.user.profile
-        review.save()
-        
-        messages.success(request, 'Submit review')
-        
-        projectObj.voteCount
-        
-        return redirect('project', projectObj.id)
-    
-    return render(request, 'projects/single-project.html', {'project': projectObj, 'form':form})
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.project = projectObj
+            review.owner = request.user.profile  
+            review.save()
+
+            messages.success(request, 'Review submitted successfully!')
+
+            projectObj.vote_count  
+            return redirect('project', pk=projectObj.id)
+
+    context = {'project': projectObj, 'form': form}
+    return render(request, 'projects/single-project.html', context)
 
 
 @login_required(login_url='login')
 def createProject(request):
-    profile = request.user.profile
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        messages.error(request, "Profile not found. Please contact support.")
+        return redirect('account')  # Or wherever appropriate
+
     form = ProjectForm()
+
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
             project = form.save(commit=False)
             project.owner = profile
             project.save()
+            messages.success(request, "Project created successfully!")
             return redirect('account')
+
     context = {'form': form}
     return render(request, 'projects/project_form.html', context)
 
 
 @login_required(login_url='login')
 def updateProject(request, pk):
-    profile = request.user.profile
-    project = profile.project_set.get(id=pk)
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        messages.error(request, "Profile not found.")
+        return redirect('account')
+
+    project = get_object_or_404(Project, id=pk, owner=profile)
     form = ProjectForm(instance=project)
+
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES, instance=project)
         if form.is_valid():
             form.save()
-            return redirect('project')
+            messages.success(request, "Project updated successfully!")
+            return redirect('project', pk=project.id)
+
     context = {'form': form}
     return render(request, 'projects/project_form.html', context)
 
 
 @login_required(login_url='login')
 def deleteProject(request, pk):
-    profile = request.user.profile
-    project = profile.project_set.get(id=pk)
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        messages.error(request, "Profile not found.")
+        return redirect('projects')
+
+    project = get_object_or_404(Project, id=pk, owner=profile)
+
     if request.method == 'POST':
         project.delete()
-        return redirect('project')
+        messages.success(request, "Project deleted successfully!")
+        return redirect('account')  # Or 'projects', depending on your flow
+
     context = {'object': project}
     return render(request, 'delete.html', context)
 
